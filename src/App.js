@@ -21,26 +21,50 @@ class App extends React.Component {
     // a l'interieur la state avec tout les clé utile
     constructor(props){
         super(props)
+        // une propriéter qui s'appele state  
         this.state = {
             water: 1.5,
             heart: 120,
             steps: 3000,
             temperature: -10
         };
+        this.onChangeHeartRate = this.onChangeHeartRate.bind(this);
+        this.onChangeSteps = this.onChangeSteps.bind(this);
+        this.onChangeTemperature = this.onChangeTemperature.bind(this);
+        this.calculateWater = this.calculateWater.bind(this);
     }
     // 2 etape Creation desfonctions qui change de la valeur du state
-    onChangeHeartRate = (value) => {
+    // une propriéter qui stoke une function anonyme
+    onChangeHeartRate(value){
         this.setState({heart : value});
+        this.calculateWater(this.state.steps, this.state.heart, this.state.temperature);
     }
-    onChangeSteps = (value) => {
+    onChangeSteps(value){
         this.setState({steps : value});
+        this.calculateWater(this.state.steps, this.state.heart, this.state.temperature);
     }
-    onChangeTemperature = (value) =>{
-        this.setState({temperature : value})
+    onChangeTemperature(value){
+        this.setState({temperature : value});
+        this.calculateWater(this.state.steps, this.state.heart, this.state.temperature);
     }
-    onChangeWater = ( )=> {
-        
+    calculateWater(steps, heart, temperature){
+        let newAmountOfWater = 1.5; 
+        console.log('le new valeur de newAmountOfWater : ', newAmountOfWater);
+        if(steps > 10000){
+            newAmountOfWater = newAmountOfWater + (0.00002 * (steps - 10000));
+        }
+        if(heart > 120){
+            newAmountOfWater = newAmountOfWater + (0.0008 * (heart - 120));
+        }
+        if(temperature > 20){
+            newAmountOfWater = newAmountOfWater + (0.02 * (temperature - 20));
+        }
+        console.log(" this.state.water : ", this.state.water);
+        console.log(" result finale : ", newAmountOfWater);
+        this.setState({water : newAmountOfWater});
     }
+    // exemple pour creer une methode dans une class 
+    // ca s'ecrit de la maniere suivante doSomething(val) {}
 
     render() {
         return ( 
@@ -48,7 +72,7 @@ class App extends React.Component {
         <div className="container-fluid cadre">
             <div className="row">
             {/* 3 etape envoyer la reference de la function a tout les page */}
-                <Water />
+                <Water water={this.state.water}/>
                 <Person 
                 steps={this.state.steps} 
                 min={MIN_STEPS} max={MAX_STEPS} 
